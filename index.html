@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Polokwane Student Accommodation - Find Your Ideal Home</title>
+   
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+   
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+   
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+   
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        navy: {
+                            800: '#0f172a',
+                            900: '#020617',
+                        },
+                        amber: {
+                            500: '#f59e0b',
+                            600: '#d97706',
+                        },
+                        emerald: {
+                            600: '#059669',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+   
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 flex flex-col min-h-screen">
+
+    <header class="sticky top-0 z-40 bg-slate-900 text-white shadow-lg backdrop-blur-md bg-opacity-95 border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+               
+                <!-- Logo -->
+                <a href="#home" onclick="navigateTo('home')" class="flex items-center space-x-3 group">
+                    <div class="w-11 h-11 bg-gradient-to-br from-amber-500 to-amber-600 rounded-xl flex items-center justify-center shadow-md group-hover:scale-105 transition-transform duration-200">
+                        <i class="fa-solid font-bold fa-graduation-cap text-slate-900 text-xl"></i>
+                    </div>
+                    <div>
+                        <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-100 to-amber-400 bg-clip-text text-transparent">Polokwane</span>
+                        <span class="block text-xs font-semibold text-amber-400 uppercase tracking-wider">Student Living</span>
+                    </div>
+                </a>
+
+                <!-- Desktop Navigation Links -->
+                <nav class="hidden md:flex items-center space-x-1 lg:space-x-2">
+                    <button id="nav-home" onclick="navigateTo('home')" class="px-4 py-2 rounded-lg text-sm font-semibold transition-colors duration-150 text-amber-400 bg-slate-800/80">
+                        <i class="fa-solid fa-house mr-1.5"></i> Home
+                    </button>
+                    <button id="nav-listings" onclick="navigateTo('listings')" class="px-4 py-2 rounded-lg text-sm font-semibold transition-colors duration-150 text-slate-300 hover:text-white hover:bg-slate-800">
+                        <i class="fa-solid fa-building mr-1.5"></i> Find Accommodation
+                    </button>
+                    <button id="nav-about" onclick="navigateTo('about')" class="px-4 py-2 rounded-lg text-sm font-semibold transition-colors duration-150 text-slate-300 hover:text-white hover:bg-slate-800">
+                        <i class="fa-solid fa-circle-info mr-1.5"></i> About Us
+                    </button>
+                    <button id="nav-contact" onclick="navigateTo('contact')" class="px-4 py-2 rounded-lg text-sm font-semibold transition-colors duration-150 text-slate-300 hover:text-white hover:bg-slate-800">
+                        <i class="fa-solid fa-envelope mr-1.5"></i> Contact
+                    </button>
+                </nav>
+
+                <!-- Favorites & Desktop Auth -->
+                <div class="flex items-center space-x-3">
+                    <button onclick="filterFavoritesOnly()" class="relative p-2.5 rounded-xl bg-slate-800 text-amber-400 hover:bg-slate-700 transition-colors shadow-inner" title="Saved Accommodations">
+                        <i class="fa-solid fa-heart text-lg"></i>
+                        <span id="fav-count" class="absolute -top-1 -right-1 bg-amber-500 text-slate-900 font-extrabold text-xs w-5 h-5 rounded-full flex items-center justify-center">0</span>
+                    </button>
+
+                    <!-- Dynamic Auth Container -->
+                    <div id="desktop-auth-container" class="hidden md:flex items-center space-x-2 ml-2">
+                        <button onclick="openModal('login-modal')" class="px-4 py-2 rounded-lg text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition-colors">
+                            <i class="fa-solid fa-right-to-bracket mr-1.5"></i> Login
+                        </button>
+                        <button onclick="openModal('signup-modal')" class="px-4 py-2 rounded-lg text-sm font-bold bg-amber-500 hover:bg-amber-600 text-slate-950 shadow transition-colors">
+                            <i class="fa-solid fa-user-plus mr-1.5"></i> Sign Up
+                        </button>
+                    </div>
+
+                    <!-- Mobile Hamburger Button -->
+                    <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="md:hidden p-2.5 rounded-xl bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 focus:outline-none">
+                        <i id="menu-icon-bars" class="fa-solid fa-bars text-xl"></i>
+                        <i id="menu-icon-close" class="fa-solid fa-xmark text-xl hidden"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-slate-900 border-b border-slate-800 px-4 pt-2 pb-6 space-y-2">
+            <button onclick="navigateTo('home')" class="w-full text-left px-4 py-3 rounded-lg text-base font-medium text-amber-400 bg-slate-800 flex items-center">
+                <i class="fa-solid fa-house w-6"></i> Home
+            </button>
+            <button onclick="navigateTo('listings')" class="w-full text-left px-4 py-3 rounded-lg text-base font-medium text-slate-300 hover:bg-slate-800 flex items-center">
+                <i class="fa-solid fa-building w-6"></i> Accommodation Directory (39)
+            </button>
+            <button onclick="navigateTo('about')" class="w-full text-left px-4 py-3 rounded-lg text-base font-medium text-slate-300 hover:bg-slate-800 flex items-center">
+                <i class="fa-solid fa-circle-info w-6"></i> About Student Housing
+            </button>
+            <button onclick="navigateTo('contact')" class="w-full text-left px-4 py-3 rounded-lg text-base font-medium text-slate-300 hover:bg-slate-800 flex items-center">
+                <i class="fa-solid fa-envelope w-6"></i> Contact Agent Support
+            </button>
+            <div id="mobile-auth-container" class="pt-3 border-t border-slate-800 flex flex-col gap-2">
+                <button onclick="openModal('login-modal')" class="w-full text-center px-4 py-2.5 rounded-lg text-sm font-semibold bg-slate-800 text-white">Login</button>
+                <button onclick="openModal('signup-modal')" class="w-full text-center px-4 py-2.5 rounded-lg text-sm font-bold bg-amber-500 text-slate-950">Sign Up</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN ROUTED CONTENT CONTAINER -->
+    <main class="flex-grow">
+       
+        <!-- HOME VIEW -->
+        <section id="view-home" class="view-section">
+            <div class="relative bg-slate-900 text-white overflow-hidden py-20 lg:py-28">
+                <div class="absolute inset-0 z-0 opacity-25 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=1600&q=80');"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-900/90 to-transparent"></div>
+               
+                <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="max-w-2xl">
+                        <div class="inline-flex items-center space-x-2 bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold px-3.5 py-1.5 rounded-full mb-6">
+                            <i class="fa-solid fa-shield-halved"></i>
+                            <span>Verified & NSFAS Accredited Student Homes</span>
+                        </div>
+                        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight">
+                            Find Your Dream <span class="text-amber-400">Student Home</span> in Polokwane
+                        </h1>
+                        <p class="mt-4 text-lg text-slate-300 font-normal leading-relaxed">
+                            Discover 39 accredited student accommodations across Flora Park, Serala View, Bendor, Fauna Park, Seshego, CBD & surrounding campuses. Safe, affordable, and fully equipped.
+                        </p>
+                       
+                        <div class="mt-8 flex flex-col sm:flex-row gap-4">
+                            <button onclick="navigateTo('listings')" class="px-7 py-3.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold rounded-xl shadow-lg transition-all flex items-center justify-center space-x-2 text-base">
+                                <span>Browse All 39 Properties</span>
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                            <button onclick="filterNSFASQuick()" class="px-7 py-3.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold rounded-xl border border-slate-700 transition-all flex items-center justify-center space-x-2 text-base">
+                                <i class="fa-solid fa-check-circle text-emerald-400"></i>
+                                <span>NSFAS Accredited Only</span>
+                            </button>
+                        </div>
+
+                        <div class="mt-12 grid grid-cols-3 gap-4 pt-8 border-t border-slate-800">
+                            <div>
+                                <span class="block text-2xl font-black text-amber-400">39+</span>
+                                <span class="text-xs text-slate-400 uppercase font-semibold">Properties Listed</span>
+                            </div>
+                            <div>
+                                <span class="block text-2xl font-black text-emerald-400">100%</span>
+                                <span class="text-xs text-slate-400 uppercase font-semibold">Wi-Fi & Security</span>
+                            </div>
+                            <div>
+                                <span class="block text-2xl font-black text-cyan-400">13</span>
+                                <span class="text-xs text-slate-400 uppercase font-semibold">Suburbs Covered</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Featured Neighborhoods -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                <div class="flex flex-col md:flex-row md:items-end justify-between mb-8">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-900">Explore by Neighborhood</h2>
+                        <p class="text-slate-600 mt-1">Convenient locations close to University of Limpopo, TUT Polokwane, and TVET Colleges.</p>
+                    </div>
+                    <button onclick="navigateTo('listings')" class="mt-4 md:mt-0 text-amber-600 font-bold hover:underline inline-flex items-center space-x-1">
+                        <span>View map & full list</span>
+                        <i class="fa-solid fa-angle-right"></i>
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+                    <button onclick="filterByLocation('Flora Park')" class="p-4 bg-white rounded-xl shadow-sm hover:shadow-md border border-slate-200 text-center group transition-all">
+                        <div class="w-10 h-10 mx-auto mb-2 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-location-dot"></i>
+                        </div>
+                        <span class="block font-bold text-slate-900 text-sm">Flora Park</span>
+                    </button>
+
+                    <button onclick="filterByLocation('Serala View')" class="p-4 bg-white rounded-xl shadow-sm hover:shadow-md border border-slate-200 text-center group transition-all">
+                        <div class="w-10 h-10 mx-auto mb-2 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-location-dot"></i>
+                        </div>
+                        <span class="block font-bold text-slate-900 text-sm">Serala View</span>
+                    </button>
+
+                    <button onclick="filterByLocation('Bendor')" class="p-4 bg-white rounded-xl shadow-sm hover:shadow-md border border-slate-200 text-center group transition-all">
+                        <div class="w-10 h-10 mx-auto mb-2 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-location-dot"></i>
+                        </div>
+                        <span class="block font-bold text-slate-900 text-sm">Bendor</span>
+                    </button>
+
+                    <button onclick="filterByLocation('Fauna Park')" class="p-4 bg-white rounded-xl shadow-sm hover:shadow-md border border-slate-200 text-center group transition-all">
+                        <div class="w-10 h-10 mx-auto mb-2 rounded-full bg-sky-100 text-sky-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-location-dot"></i>
+                        </div>
+                        <span class="block font-bold text-slate-900 text-sm">Fauna Park</span>
+                    </button>
+
+                    <button onclick="filterByLocation('Polokwane CBD')" class="p-4 bg-white rounded-xl shadow-sm hover:shadow-md border border-slate-200 text-center group transition-all">
+                        <div class="w-10 h-10 mx-auto mb-2 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-location-dot"></i>
+                        </div>
+                        <span class="block font-bold text-slate-900 text-sm">Polokwane CBD</span>
+                    </button>
+
+                    <button onclick="filterByLocation('Seshego')" class="p-4 bg-white rounded-xl shadow-sm hover:shadow-md border border-slate-200 text-center group transition-all">
+                        <div class="w-10 h-10 mx-auto mb-2 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-location-dot"></i>
+                        </div>
+                        <span class="block font-bold text-slate-900 text-sm">Seshego</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- LISTINGS VIEW -->
+        <section id="view-listings" class="view-section hidden py-10">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <h1 class="text-3xl font-black text-slate-900 tracking-tight">Student Accommodation Directory</h1>
+                        <p class="text-slate-600 mt-1">Showing <span id="displayed-count" class="font-bold text-amber-600">39</span> verified listings in Polokwane</p>
+                    </div>
+                    <button onclick="resetFilters()" class="self-start md:self-auto text-xs font-semibold px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-lg transition-colors flex items-center space-x-1">
+                        <i class="fa-solid fa-rotate-left"></i>
+                        <span>Reset All Filters</span>
+                    </button>
+                </div>
+
+                <!-- FILTER BAR -->
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 mb-8 space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Search Keywords</label>
+                            <div class="relative">
+                                <input type="text" id="filter-search" oninput="applyFilters()" placeholder="Property name..." class="w-full pl-9 pr-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                                <i class="fa-solid fa-magnifying-glass absolute left-3 top-3.5 text-slate-400 text-sm"></i>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Neighborhood</label>
+                            <select id="filter-location" onchange="applyFilters()" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                                <option value="ALL">All Suburbs (39)</option>
+                                <option value="Flora Park">Flora Park</option>
+                                <option value="Serala View">Serala View</option>
+                                <option value="Bendor">Bendor</option>
+                                <option value="Fauna Park">Fauna Park</option>
+                                <option value="Polokwane CBD">Polokwane CBD</option>
+                                <option value="Seshego">Seshego</option>
+                                <option value="Sterpark">Sterpark</option>
+                                <option value="Eduan Park">Eduan Park</option>
+                                <option value="Ivy Park">Ivy Park</option>
+                                <option value="Thornhill">Thornhill</option>
+                                <option value="Welgelegen">Welgelegen</option>
+                                <option value="Annadale">Annadale</option>
+                                <option value="Penina Park">Penina Park</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Room Type</label>
+                            <select id="filter-type" onchange="applyFilters()" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                                <option value="ALL">All Types</option>
+                                <option value="Single Room">Single Room</option>
+                                <option value="Sharing Room">Sharing Room</option>
+                                <option value="Bachelor Studio">Bachelor Studio</option>
+                                <option value="1 Bedroom Apartment">1 Bedroom Apartment</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Max Monthly Price</label>
+                            <select id="filter-price" onchange="applyFilters()" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                                <option value="ALL">Any Rent</option>
+                                <option value="2500">Under R2,500 / month</option>
+                                <option value="3500">Under R3,500 / month</option>
+                                <option value="4500">Under R4,500 / month</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="pt-3 border-t border-slate-100 flex flex-wrap gap-4 text-xs font-semibold text-slate-700">
+                        <label class="inline-flex items-center space-x-2 cursor-pointer">
+                            <input type="checkbox" id="filter-nsfas" onchange="applyFilters()" class="rounded border-slate-300 text-amber-500 focus:ring-amber-500">
+                            <span>NSFAS Accredited</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div id="listings-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+
+                <div id="no-results" class="hidden text-center py-16 bg-white rounded-2xl border border-dashed border-slate-300 my-6">
+                    <i class="fa-solid fa-house-circle-xmark text-5xl text-slate-300 mb-3"></i>
+                    <h3 class="text-lg font-bold text-slate-800">No properties matched your criteria</h3>
+                    <button onclick="resetFilters()" class="mt-4 px-5 py-2 bg-amber-500 text-slate-950 font-bold rounded-lg text-sm">
+                        Reset Filters
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ABOUT VIEW -->
+        <section id="view-about" class="view-section hidden py-12">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="bg-white p-8 sm:p-12 rounded-2xl shadow-sm border border-slate-200 space-y-6">
+                    <span class="text-xs font-bold uppercase tracking-wider text-amber-600 bg-amber-50 px-3 py-1 rounded-full">About Polokwane Student Living</span>
+                    <h1 class="text-3xl font-extrabold text-slate-900">Your Trusted Student Housing Partner in Limpopo</h1>
+                    
+                    <div class="space-y-4 text-slate-600 leading-relaxed text-sm sm:text-base">
+                        <p>
+                            <strong>Polokwane Student Living</strong> was established to bridge the housing gap for students attending higher education institutions across Polokwane, including the University of Limpopo (Turfloop), Tshwane University of Technology (TUT) Polokwane Campus, Capricorn TVET College, and various private colleges.
+                        </p>
+                        <p>
+                            Finding secure, comfortable, and affordable accommodation shouldn't be a stressful ordeal. Our curated directory features 39 verified residences ranging from peaceful single study rooms to budget-friendly sharing apartments and executive bachelors.
+                        </p>
+                        
+                        <h3 class="text-xl font-bold text-slate-900 pt-4">Our Core Commitments</h3>
+                        <div class="grid sm:grid-cols-2 gap-4 pt-2">
+                            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+                                <h4 class="font-bold text-slate-900 flex items-center mb-1"><i class="fa-solid fa-shield-check text-emerald-600 mr-2"></i> NSFAS Compliance</h4>
+                                <p class="text-xs text-slate-600">We prioritize accredited housing options that accept direct bursary allowances, ensuring zero out-of-pocket setup worries.</p>
+                            </div>
+                            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+                                <h4 class="font-bold text-slate-900 flex items-center mb-1"><i class="fa-solid fa-wifi text-amber-500 mr-2"></i> Connectivity & Safety</h4>
+                                <p class="text-xs text-slate-600">Every listed residence guarantees high-speed uncapped Wi-Fi and 24/7 security features such as CCTV and biometric access.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACT VIEW -->
+        <section id="view-contact" class="view-section hidden py-12">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- Contact Form -->
+                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
+                        <h2 class="text-2xl font-bold text-slate-900 mb-2">Contact Support Desk</h2>
+                        <p class="text-slate-600 text-sm mb-6">Have questions regarding room availability or lease applications? Send us a message.</p>
+
+                        <form onsubmit="handleContactSubmit(event)" class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Full Name</label>
+                                <input type="text" required placeholder="Thabo Mbeki" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Email Address</label>
+                                <input type="email" required placeholder="student@gmail.com" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Message</label>
+                                <textarea rows="4" required placeholder="Type your inquiry here..." class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none"></textarea>
+                            </div>
+                            <button type="submit" class="w-full py-3 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold rounded-xl shadow transition-colors">
+                                Send Message
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Info Box -->
+                    <div class="bg-slate-900 text-white p-8 rounded-2xl shadow-sm flex flex-col justify-between space-y-6">
+                        <div>
+                            <h2 class="text-2xl font-bold mb-4">Polokwane Office</h2>
+                            <p class="text-slate-300 text-sm mb-6">Visit our walk-in support center for direct leasing assistance.</p>
+                            
+                            <div class="space-y-4 text-sm text-slate-300">
+                                <div class="flex items-start space-x-3">
+                                    <i class="fa-solid fa-location-dot text-amber-400 mt-1"></i>
+                                    <span>Landros Mare Street, Polokwane Central, Limpopo, 0700</span>
+                                </div>
+                                <div class="flex items-center space-x-3">
+                                    <i class="fa-solid fa-phone text-amber-400"></i>
+                                    <span>+27 15 291 4000 / +27 72 000 1234</span>
+                                </div>
+                                <div class="flex items-center space-x-3">
+                                    <i class="fa-solid fa-envelope text-amber-400"></i>
+                                    <span>support@polokwanestudentliving.co.za</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 text-xs text-slate-300">
+                            <span class="font-bold text-amber-400 block mb-1"><i class="fa-solid fa-clock mr-1"></i> Operating Hours</span>
+                            Monday – Friday: 08:00 – 17:00<br>
+                            Saturday: 09:00 – 13:00
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- LOGIN MODAL -->
+    <div id="login-modal" class="fixed inset-0 z-50 hidden bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 text-white w-full max-w-md rounded-2xl shadow-2xl p-6 sm:p-8 relative">
+            <button onclick="closeModal('login-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-black text-amber-400">Welcome Back</h2>
+                <p class="text-slate-400 text-xs mt-1">Log in to manage your student housing profile</p>
+            </div>
+            <form onsubmit="handleLoginSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1">Email Address</label>
+                    <input type="email" id="login-email" required placeholder="student@gmail.com" class="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1">Password</label>
+                    <input type="password" id="login-password" required placeholder="••••••••" class="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                </div>
+                <button type="submit" class="w-full py-3 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold rounded-xl shadow transition-colors">
+                    Sign In
+                </button>
+            </form>
+            <p class="text-xs text-center text-slate-400 mt-4">
+                Don't have an account? 
+                <button onclick="switchModal('login-modal', 'signup-modal')" class="text-amber-400 font-bold hover:underline">Sign Up</button>
+            </p>
+        </div>
+    </div>
+
+    <!-- SIGN UP MODAL -->
+    <div id="signup-modal" class="fixed inset-0 z-50 hidden bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 text-white w-full max-w-md rounded-2xl shadow-2xl p-6 sm:p-8 relative">
+            <button onclick="closeModal('signup-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-black text-amber-400">Create Account</h2>
+                <p class="text-slate-400 text-xs mt-1">Join Polokwane Student Living today</p>
+            </div>
+            <form onsubmit="handleSignupSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1">Full Name</label>
+                    <input type="text" id="signup-name" required placeholder="Thabo Mbeki" class="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1">Email Address</label>
+                    <input type="email" id="signup-email" required placeholder="student@gmail.com" class="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1">Password</label>
+                    <input type="password" id="signup-password" required placeholder="••••••••" class="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                </div>
+                <button type="submit" class="w-full py-3 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold rounded-xl shadow transition-colors">
+                    Create Account
+                </button>
+            </form>
+            <p class="text-xs text-center text-slate-400 mt-4">
+                Already have an account? 
+                <button onclick="switchModal('signup-modal', 'login-modal')" class="text-amber-400 font-bold hover:underline">Log In</button>
+            </p>
+        </div>
+    </div>
+
+    <!-- DETAILS MODAL -->
+    <div id="details-modal" class="fixed inset-0 z-50 hidden bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden p-6 relative">
+            <button onclick="closeDetailsModal()" class="absolute top-4 right-4 text-slate-500 hover:text-slate-800"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <img id="modal-img" src="" alt="Property" class="w-full h-48 object-cover rounded-xl mb-4">
+            <span id="modal-type-badge" class="px-2.5 py-1 text-xs font-bold rounded-full mb-2 inline-block"></span>
+            <h2 id="modal-title" class="text-2xl font-bold text-slate-900 mb-1"></h2>
+            <p id="modal-location" class="text-sm text-amber-600 font-semibold mb-3"></p>
+            <p id="modal-desc" class="text-slate-600 text-sm mb-4"></p>
+            <div class="flex justify-between items-center pt-4 border-t border-slate-100">
+                <span id="modal-price" class="text-2xl font-black text-slate-900"></span>
+                <button onclick="closeDetailsModal()" class="px-5 py-2 bg-amber-500 text-slate-950 font-bold rounded-lg text-sm">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-slate-950 text-slate-400 py-8 border-t border-slate-800 text-center text-xs">
+        <p>&copy; 2026 Polokwane Student Accommodation Directory. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        // 39 FULL ACCOMMODATIONS DATASET (Distinguishing Single vs Sharing images)
+        let allAccommodations = [
+            { id: 1, title: "Flora Park Executive Single Residence", location: "Flora Park", type: "Single Room", price: 3200, nsfas: 1, image: "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=800&q=80", description: "Private single room equipped with a study desk, chair, and fast fiber internet." },
+            { id: 2, title: "Serala View Student Haven (Sharing)", location: "Serala View", type: "Sharing Room", price: 2400, nsfas: 1, image: "https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&w=800&q=80", description: "Comfortable twin-share room designed for two students with individual wardrobes." },
+            { id: 3, title: "Bendor Luxury Bachelor Studio", location: "Bendor", type: "Bachelor Studio", price: 4500, nsfas: 0, image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80", description: "Fully self-contained private bachelor pad with ensuite kitchen and bathroom." },
+            { id: 4, title: "Fauna Park Quiet Single Rooms", location: "Fauna Park", type: "Single Room", price: 3100, nsfas: 1, image: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=800&q=80", description: "Quiet neighborhood single room ideal for focused academic study." },
+            { id: 5, title: "Seshego Heights Sharing Flat", location: "Seshego", type: "Sharing Room", price: 2100, nsfas: 1, image: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80", description: "Affordable shared student apartment close to public transport routes." },
+            { id: 6, title: "CBD Academic Single Quarters", location: "Polokwane CBD", type: "Single Room", price: 2800, nsfas: 1, image: "https://images.unsplash.com/photo-1598928506311-c55ded91a20c?auto=format&fit=crop&w=800&q=80", description: "Central single room right next to shopping malls and college campuses." },
+            { id: 7, title: "Sterpark Modern Single Studio", location: "Sterpark", type: "Single Room", price: 3800, nsfas: 0, image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=80", description: "Secure gated complex single room with backup solar power." },
+            { id: 8, title: "Eduan Park Student Sharing", location: "Eduan Park", type: "Sharing Room", price: 2300, nsfas: 1, image: "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?auto=format&fit=crop&w=800&q=80", description: "Spacious sharing room with communal lounge and study hall." },
+            { id: 9, title: "Ivy Park Budget Single Room", location: "Ivy Park", type: "Single Room", price: 2600, nsfas: 1, image: "ivy.png", description: "Safe and secure single accommodation with uncapped Wi-Fi." },
+            { id: 10, title: "Thornhill Apartment 1-Bed", location: "Thornhill", type: "1 Bedroom Apartment", price: 4900, nsfas: 0, image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80", description: "Luxury 1-bedroom apartment for senior students." },
+            { id: 11, title: "Welgelegen Sharing Loft", location: "Welgelegen", type: "Sharing Room", price: 2500, nsfas: 1, image: "https://images.unsplash.com/photo-1522441815192-d9f04eb0615c?auto=format&fit=crop&w=800&q=80", description: "Bright twin-share loft with modern amenities." },
+            { id: 12, title: "Annadale Single Student Pod", location: "Annadale", type: "Single Room", price: 2700, nsfas: 1, image: "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=800&q=80", description: "Compact private room with secure perimeter fencing." },
+            { id: 13, title: "Penina Park Sharing Haven", location: "Penina Park", type: "Sharing Room", price: 2200, nsfas: 1, image: "https://images.unsplash.com/photo-1560185127-6ed189bf02f4?auto=format&fit=crop&w=800&q=80", description: "Budget-friendly shared room with high-speed internet." },
+            { id: 14, title: "Flora Park Prestige Single", location: "Flora Park", type: "Single Room", price: 3400, nsfas: 1, image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80", description: "Premium single room with en-suite shower." },
+            { id: 15, title: "Serala View Twin Sharing", location: "Serala View", type: "Sharing Room", price: 2500, nsfas: 1, image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=800&q=80", description: "Fully furnished 2-student sharing unit." },
+            { id: 16, title: "Bendor Executive Bachelor", location: "Bendor", type: "Bachelor Studio", price: 4600, nsfas: 0, image: "https://images.unsplash.com/photo-1536376072261-38c75010e6c9?auto=format&fit=crop&w=800&q=80", description: "Upmarket studio with modern finishes." },
+            { id: 17, title: "Fauna Park Scholar Room", location: "Fauna Park", type: "Single Room", price: 2900, nsfas: 1, image: "https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&w=800&q=80", description: "Quiet single room with dedicated study space." },
+            { id: 18, title: "Seshego Comrades Sharing", location: "Seshego", type: "Sharing Room", price: 2000, nsfas: 1, image: "https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&w=800&q=80", description: "Vibrant community sharing rooms for students." },
+            { id: 19, title: "CBD Central Student Loft", location: "Polokwane CBD", type: "1 Bedroom Apartment", price: 4200, nsfas: 1, image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80", description: "Spacious 1-bedroom apartment in town." },
+            { id: 20, title: "Sterpark Secure Single", location: "Sterpark", type: "Single Room", price: 3500, nsfas: 1, image: "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=800&q=80", description: "Safe single room with biometric access control." },
+            { id: 21, title: "Eduan Park Campus Nest", location: "Eduan Park", type: "Single Room", price: 3000, nsfas: 1, image: "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=800&q=80", description: "Walking distance to major TVET campuses." },
+            { id: 22, title: "Ivy Park Twin Sharing", location: "Ivy Park", type: "Sharing Room", price: 2150, nsfas: 1, image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=800&q=80", description: "Clean and neat double sharing room." },
+            { id: 23, title: "Thornhill Studio Suite", location: "Thornhill", type: "Bachelor Studio", price: 4300, nsfas: 0, image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80", description: "Modern studio with uncapped fibre internet." },
+            { id: 24, title: "Welgelegen Single Room", location: "Welgelegen", type: "Single Room", price: 3300, nsfas: 1, image: "single.png", description: "Peaceful environment for academic focus." },
+            { id: 25, title: "Annadale Sharing Flat", location: "Annadale", type: "Sharing Room", price: 2250, nsfas: 1, image: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80", description: "Affordable shared student housing." },
+            { id: 26, title: "Penina Park Single Unit", location: "Penina Park", type: "Single Room", price: 2850, nsfas: 1, image: "https://images.unsplash.com/photo-1598928506311-c55ded91a20c?auto=format&fit=crop&w=800&q=80", description: "Cozy single room with secure parking." },
+            { id: 27, title: "Flora Park Garden Studio", location: "Flora Park", type: "Bachelor Studio", price: 4400, nsfas: 1, image: "https://images.unsplash.com/photo-1536376072261-38c75010e6c9?auto=format&fit=crop&w=800&q=80", description: "Private garden bachelor studio for students." },
+            { id: 28, title: "Serala View Elite Single", location: "Serala View", type: "Single Room", price: 3600, nsfas: 0, image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80", description: "Upmarket single room in quiet suburb." },
+            { id: 29, title: "Bendor Sharing Residence", location: "Bendor", type: "Sharing Room", price: 2700, nsfas: 1, image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=800&q=80", description: "High-end sharing room with backup water supply." },
+            { id: 30, title: "Fauna Park Modern 1-Bed", location: "Fauna Park", type: "1 Bedroom Apartment", price: 4700, nsfas: 0, image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80", description: "Spacious 1-bedroom apartment with balcony." },
+            { id: 31, title: "Seshego Single Room Hub", location: "Seshego", type: "Single Room", price: 2500, nsfas: 1, image: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=800&q=80", description: "Secure single room with solar power backup." },
+            { id: 32, title: "CBD Academic Sharing", location: "Polokwane CBD", type: "Sharing Room", price: 2300, nsfas: 1, image: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80", description: "Convenient sharing accommodation in town center." },
+            { id: 33, title: "Sterpark Luxury Studio", location: "Sterpark", type: "Bachelor Studio", price: 4800, nsfas: 0, image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80", description: "Luxury fully furnished bachelor studio." },
+            { id: 34, title: "Eduan Park Sharing Rooms", location: "Eduan Park", type: "Sharing Room", price: 2350, nsfas: 1, image: "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?auto=format&fit=crop&w=800&q=80", description: "Comfortable shared living space for students." },
+            { id: 35, title: "Ivy Park Student Haven", location: "Ivy Park", type: "Single Room", price: 2950, nsfas: 1, image: "image.png", description: "Well-lit single room with study desk and Wi-Fi." },
+            { id: 36, title: "Thornhill Twin Sharing", location: "Thornhill", type: "Sharing Room", price: 2600, nsfas: 1, image: "https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&w=800&q=80", description: "Modern twin-share apartment in Thornhill." },
+            { id: 37, title: "Welgelegen Executive Studio", location: "Welgelegen", type: "Bachelor Studio", price: 4600, nsfas: 0, image: "https://images.unsplash.com/photo-1536376072261-38c75010e6c9?auto=format&fit=crop&w=800&q=80", description: "Private studio unit with premium security features." },
+            { id: 38, title: "Annadale Scholar Single", location: "Annadale", type: "Single Room", price: 2800, nsfas: 1, image: "https://images.unsplash.com/photo-1598928506311-c55ded91a20c?auto=format&fit=crop&w=800&q=80", description: "Affordable single room close to college routes." },
+            { id: 39, title: "Penina Park Finalist Room", location: "Penina Park", type: "Single Room", price: 3100, nsfas: 1, image: "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=800&q=80", description: "Spacious single room suited for final year students." }
+        ];
+
+        // Check Login Session & Fetch Data on Startup
+        window.addEventListener('DOMContentLoaded', async () => {
+            checkAuthSession();
+            renderListings(allAccommodations);
+        });
+
+        // Modal Toggle Functions
+        function openModal(id) {
+            document.getElementById(id).classList.remove('hidden');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+        }
+
+        function switchModal(closeId, openId) {
+            closeModal(closeId);
+            openModal(openId);
+        }
+
+        function checkAuthSession() {
+            const loggedInUser = localStorage.getItem('loggedInUser');
+            if (loggedInUser) {
+                try {
+                    const user = JSON.parse(loggedInUser);
+                    document.getElementById('desktop-auth-container').innerHTML = `
+                        <span class="text-sm font-semibold text-amber-400 mr-2">Hi, ${user.name || user.email}</span>
+                        <button onclick="handleLogout()" class="px-3.5 py-1.5 text-xs font-bold bg-rose-600 hover:bg-rose-700 text-white rounded-lg transition-colors shadow">Logout</button>
+                    `;
+                    document.getElementById('mobile-auth-container').innerHTML = `
+                        <div class="px-4 py-2 text-sm text-amber-400 font-semibold">Logged in as ${user.name || user.email}</div>
+                        <button onclick="handleLogout()" class="w-full text-center px-4 py-2.5 rounded-lg text-sm font-bold bg-rose-600 text-white">Logout</button>
+                    `;
+                } catch (e) {
+                    console.error("Session parse error", e);
+                }
+            }
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('loggedInUser');
+            alert('Logged out successfully!');
+            window.location.reload();
+        }
+
+        // Handle Login API Request
+        async function handleLoginSubmit(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            try {
+                const res = await fetch('http://localhost:3000/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    localStorage.setItem('loggedInUser', JSON.stringify(data.user));
+                    alert('Login successful!');
+                    window.location.reload();
+                } else {
+                    alert(data.message || 'Login failed.');
+                }
+            } catch (err) {
+                alert('Server unreachable. Make sure "node server.js" is running in your terminal.');
+            }
+        }
+
+        // Handle Sign Up API Request
+        async function handleSignupSubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('signup-name').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+
+            try {
+                const res = await fetch('http://localhost:3000/api/signup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, password })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    alert('Account created! Logging you in...');
+                    localStorage.setItem('loggedInUser', JSON.stringify(data.user || { name, email }));
+                    window.location.reload();
+                } else {
+                    alert(data.message || 'Sign up failed.');
+                }
+            } catch (err) {
+                alert('Server unreachable. Make sure "node server.js" is running in your terminal.');
+            }
+        }
+
+        function handleContactSubmit(e) {
+            e.preventDefault();
+            alert('Thank you! Your message has been sent to our support team.');
+            e.target.reset();
+        }
+
+        // Router
+        function navigateTo(viewName) {
+            document.querySelectorAll('.view-section').forEach(sec => sec.classList.add('hidden'));
+            document.getElementById(`view-${viewName}`).classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        }
+
+        // Render Listing Cards with Room Type Badges & Images
+        function renderListings(items) {
+            const grid = document.getElementById('listings-grid');
+            const count = document.getElementById('displayed-count');
+            const noRes = document.getElementById('no-results');
+
+            grid.innerHTML = '';
+            count.textContent = items.length;
+
+            if (items.length === 0) {
+                noRes.classList.remove('hidden');
+                return;
+            } else {
+                noRes.classList.add('hidden');
+            }
+
+            items.forEach(item => {
+                const isSharing = item.type.includes('Sharing');
+                const card = document.createElement('div');
+                card.className = "bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col justify-between";
+                card.innerHTML = `
+                    <div class="relative h-48 bg-slate-100">
+                        <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover">
+                        <div class="absolute top-3 left-3 flex gap-1.5">
+                            <span class="text-xs font-bold px-2.5 py-1 rounded-full shadow ${item.nsfas ? 'bg-emerald-600 text-white' : 'bg-slate-800 text-white'}">
+                                ${item.nsfas ? 'NSFAS' : 'Private'}
+                            </span>
+                            <span class="text-xs font-bold px-2.5 py-1 rounded-full shadow ${isSharing ? 'bg-amber-500 text-slate-950' : 'bg-indigo-600 text-white'}">
+                                <i class="fa-solid ${isSharing ? 'fa-users' : 'fa-user'} mr-1"></i>${item.type}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="p-5 flex flex-col flex-grow justify-between">
+                        <div>
+                            <span class="text-xs font-semibold text-amber-600 block mb-1"><i class="fa-solid fa-location-dot mr-1"></i>${item.location}</span>
+                            <h3 class="text-lg font-bold text-slate-900 mb-2">${item.title}</h3>
+                            <p class="text-slate-600 text-xs mb-4 line-clamp-2">${item.description}</p>
+                        </div>
+                        <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+                            <div>
+                                <span class="text-xl font-black text-slate-900">R${item.price}</span>
+                                <span class="text-xs text-slate-400">/pm</span>
+                            </div>
+                            <button onclick="showDetails(${item.id})" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold rounded-lg text-xs">
+                                View Details
+                            </button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Filtering System
+        function applyFilters() {
+            const search = document.getElementById('filter-search').value.toLowerCase();
+            const location = document.getElementById('filter-location').value;
+            const type = document.getElementById('filter-type').value;
+            const maxPrice = document.getElementById('filter-price').value;
+            const nsfasOnly = document.getElementById('filter-nsfas').checked;
+
+            const filtered = allAccommodations.filter(item => {
+                const matchesSearch = item.title.toLowerCase().includes(search) || item.location.toLowerCase().includes(search);
+                const matchesLocation = location === 'ALL' || item.location === location;
+                const matchesType = type === 'ALL' || item.type === type;
+                const matchesPrice = maxPrice === 'ALL' || item.price <= parseInt(maxPrice);
+                const matchesNSFAS = !nsfasOnly || item.nsfas == 1;
+
+                return matchesSearch && matchesLocation && matchesType && matchesPrice && matchesNSFAS;
+            });
+
+            renderListings(filtered);
+        }
+
+        function filterByLocation(loc) {
+            navigateTo('listings');
+            document.getElementById('filter-location').value = loc;
+            applyFilters();
+        }
+
+        function filterNSFASQuick() {
+            navigateTo('listings');
+            document.getElementById('filter-nsfas').checked = true;
+            applyFilters();
+        }
+
+        function resetFilters() {
+            document.getElementById('filter-search').value = '';
+            document.getElementById('filter-location').value = 'ALL';
+            document.getElementById('filter-type').value = 'ALL';
+            document.getElementById('filter-price').value = 'ALL';
+            document.getElementById('filter-nsfas').checked = false;
+            renderListings(allAccommodations);
+        }
+
+        // Details Modal
+        function showDetails(id) {
+            const item = allAccommodations.find(a => a.id === id);
+            if (!item) return;
+            const isSharing = item.type.includes('Sharing');
+            document.getElementById('modal-img').src = item.image;
+            document.getElementById('modal-title').textContent = item.title;
+            document.getElementById('modal-location').innerHTML = `<i class="fa-solid fa-location-dot mr-1"></i>${item.location}`;
+            document.getElementById('modal-desc').textContent = item.description;
+            document.getElementById('modal-price').textContent = `R${item.price} / month`;
+            
+            const badge = document.getElementById('modal-type-badge');
+            badge.textContent = item.type;
+            badge.className = `px-2.5 py-1 text-xs font-bold rounded-full mb-2 inline-block ${isSharing ? 'bg-amber-100 text-amber-800' : 'bg-indigo-100 text-indigo-800'}`;
+
+            document.getElementById('details-modal').classList.remove('hidden');
+        }
+
+        function closeDetailsModal() {
+            document.getElementById('details-modal').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
