@@ -7,6 +7,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+
 // Connect to the SQLite database
 const db = new sqlite3.Database('./accommodation.db', (err) => {
   if (err) console.error('Database connection error:', err.message);
