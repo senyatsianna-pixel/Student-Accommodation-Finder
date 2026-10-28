@@ -1,3 +1,4 @@
+
 {
   "name": "polokwane-accommodation",
   "version": "1.0.0",
@@ -8,6 +9,7 @@
   "dependencies": {
     "express": "^4.19.2",
     "cors": "^2.8.5",
-    "sqlite3": "^5.1.7"
+    "sqlite3": "^5.1.7",
+    "bcryptjs": "^2.4.3"
   }
 }
